@@ -299,14 +299,16 @@ public:
           return false;
         }
       }
-      context = cl::Context(device);
+      std::vector<cl::Device> devices;
+      devices.push_back(device);
+      context = cl::Context(devices);
 
       std::string options;
       generateOptions(options);
 
       cl::Program::Sources source(1, std::make_pair(sourceCode.c_str(), sourceCode.length()));
       program = cl::Program(context, source);
-      program.build(options.c_str());
+      program.build(devices, options.c_str());
 
       queue = cl::CommandQueue(context, device, 0, &err);
 
